@@ -117,7 +117,7 @@ create table ttsbank_cus_transactions (
     constraint customer_track_id_fk foreign key (customer_id) references ttsbank_customers (customer_id)
     );
 
----Creating sequence such as sql , sq2 , sq3 , sq4
+---Creating sequence such as sql , sq2 , sq3 , sq4 , sq5
 create sequence sq1;
 
 create sequence sq2;
@@ -125,4 +125,7 @@ create sequence sq2;
 create sequence sq3;
 
 create sequence sq4 start with 10000000;
+
+
+create sequence sq5 ;
    
