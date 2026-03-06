@@ -1,0 +1,128 @@
+
+--- Creating table table ttsbank_banks
+create table ttsbank_banks (
+bank_id number,
+bank_code varchar2(25),
+bank_location varchar2(30) not null,
+is_headoffice char(1) not null,
+constraint bank_id_pk primary key (bank_id),
+constraint bank_code unique (bank_code)
+);
+
+begin
+insert into ttsbank_banks(bank_id, bank_code, bank_location, is_headoffice)
+ values(1000,'ttsbnk001','chennai','y');
+insert into ttsbank_banks(bank_id, bank_code, bank_location, is_headoffice)
+ values(1001,'ttsbnk002','madurai','n');
+insert into ttsbank_banks(bank_id, bank_code, bank_location, is_headoffice)
+ values(1002,'ttsbnk003','coimbatore','n');
+end;
+/
+--- creating table ttsbank_products
+create table ttsbank_products (
+product_id number,
+product_name varchar2(25) not null,
+product_code varchar2(5) not null,
+constraint prod_id_pk primary key (product_id)
+);
+
+begin
+insert into ttsbank_products(product_id, product_name,product_code)
+values(2000,'savings bank','sb');
+insert into ttsbank_products(product_id, product_name,product_code)
+values(2001,'current','cb');
+insert into ttsbank_products(product_id, product_name,product_code)
+values(2002,'business','bb');
+end;
+/
+
+---creating table  ttsbank_sub_products
+create table ttsbank_sub_products (
+sub_product_id number,
+product_id number,
+features varchar2(25) not null,
+balance_limit number not null,
+withdraw_limit number not null,
+constraint sub_product_id_pk primary key (sub_product_id),
+constraint prod_id_fk foreign key (product_id) references ttsbank_products (product_id)
+);
+
+begin
+insert into ttsbank_sub_products (sub_product_id, product_id, features,balance_limit, withdraw_limit)
+values(3000,2000,'Silver',5000,50000);
+insert into ttsbank_sub_products (sub_product_id, product_id, features,balance_limit, withdraw_limit)
+values(3001,2000,'Gold',10000,100000);
+insert into ttsbank_sub_products (sub_product_id, product_id, features,balance_limit, withdraw_limit)
+values(3002,2000,'Platinum',15000,2500000);
+end;
+/
+
+----creating  ttsbank_customers
+create table ttsbank_customers ( 
+    customer_id number,
+    customer_name varchar2(50) not null,
+    customer_phno number not null,
+    customer_mail varchar2(100),
+    aadhar_no number not null,
+    pan_no varchar2(50) not null,
+    password varchar2(15),
+    constraint customer_id primary key (customer_id),
+    constraint customer_phno_uk unique (customer_phno),
+    constraint customer_mail_uk unique (customer_mail),
+    constraint aadhar_no_uk unique (aadhar_no),
+    constraint pan_no_uk unique (pan_no)
+);
+
+
+---creating table ttsbank_cus_products 
+create table ttsbank_cus_products (
+    cus_product_id  number,
+    sub_product_id number,
+    customer_id number,
+    account_no number not null,
+    account_open_on date default sysdate,
+    status varchar2(25) default 'Active',
+    available_balance number not null,
+    bank_id number,
+    constraint cus_product_id_pk primary key (cus_product_id),
+    constraint sub_product_id_fk foreign key (sub_product_id) references ttsbank_sub_products (sub_product_id),
+    constraint customer_id_fk foreign key (customer_id) references ttsbank_customers (customer_id),
+    constraint bank_id_fk foreign key (bank_id) references ttsbank_banks (bank_id),
+    constraint account_no_uk unique (account_no)
+    );
+ 
+-----Creating table ttsbank_cus_transactions
+create table ttsbank_cus_transactions (
+    cus_trans_id number,
+    cus_product_id number,
+    trans_amount number not null,
+    trans_type char(1),
+    trans_on date default sysdate,
+    benef_account varchar2(25) not null,
+    trans_mode varchar2(50) not null,
+    account_balance number not null,
+    constraint cus_trans_id_pk primary key (cus_trans_id),
+    constraint cus_product_id_fk foreign key (cus_product_id) references ttsbank_cus_products (cus_product_id),
+    constraint trans_type_ck check (trans_type in ('c','d'))
+    );
+
+
+----creating table ttsbank_password_track
+ create table ttsbank_password_track (
+    track_id number,
+    customer_id number,
+    customer_password varchar2(50) not null,
+    password_changed_on date default sysdate,
+    constraint track_id_pk primary key (track_id),
+    constraint customer_track_id_fk foreign key (customer_id) references ttsbank_customers (customer_id)
+    );
+
+---Creating sequence such as sql , sq2 , sq3 , sq4
+create sequence sq1;
+
+create sequence sq2;
+
+create sequence sq3;
+
+create sequence sq4 start with 10000000;
+   
